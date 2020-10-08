@@ -17,7 +17,7 @@ function start(){
 }
 start()
 
-// Make table and chart
+// Make table 
 function buildtable(sampleid){
   d3.json("samples.json").then(function(data){
     var demographics = data.metadata
@@ -32,12 +32,23 @@ function buildtable(sampleid){
   });
   })
 }
-
-
-function buildchart(sampleid){
+//The following code is borrowed with permission from office hours with Dom on Thursday, October 1.
+// Make bubble chart
+function DrawBubbleChart(sampleId){
+  console.log('DrawBubbleChart(${sampleId})');
 
 }
-function optionChanged(newid){
-  buildtable(newid)
-  buildchart(newid) 
+//Make bar chart
+function DrawBargraph(sampleID)
+{
+  console.log('Drawbargraph(${sampleID})');
 }
+
+function optionChanged(newSampleId)
+{
+  console.log('User selected ${newSampleId}')
+  // buildtable(newid)
+  // buildchart(newid) 
+}
+
+//Make bubble chart
