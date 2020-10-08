@@ -34,21 +34,46 @@ function buildtable(sampleid){
 }
 //The following code is borrowed with permission from office hours with Dom on Thursday, October 1.
 // Make bubble chart
-function DrawBubbleChart(sampleId){
+function DrawBubbleChart(sampleId)
+{
   console.log('DrawBubbleChart(${sampleId})');
 
 }
 //Make bar chart
 function DrawBargraph(sampleID)
 {
-  console.log('Drawbargraph(${sampleID})');
+  console.log('Drawbargraph(${sampleId})');
+  d3.json("samples.json").then((data)) => {
+
+    var samples = data.samples;
+    var resultArray = samples.filter(s => s.id == sampleId);
+    var result = resultArray[0];
+
+    var otu_ids = result.otu_ids;
+    var otu_labels = result.otu_labels;
+    var sample_values = result.sample_values;
+    var yticks = otu_ids.slice(0, 10).map(otuId) => 'OTU ${otuId}').reverse();
+
+    var barData = {
+      x: sample_values.slice(0, 10).reverse(),
+      y: yticks,
+      type: "bar",
+      text: otu_labels.slice(0, 10).reverse(),
+      orientation: "h"
+    }
+    var barLayout = {
+      title: "Top 10 Bacteria Cultures",
+      margin: {t: 30, l: 150}
+    }
+    Plotly.newPlot("bar", barData, barLayout);
+  });
 }
 
-function optionChanged(newSampleId)
-{
-  console.log('User selected ${newSampleId}')
-  // buildtable(newid)
-  // buildchart(newid) 
-}
+// function optionChanged(newSampleId)
+// {
+//   console.log('User selected ${newSampleId}');
+//   DrawBubbleChart(newSampleId);
+//   DrawBargraph(newSampleID);
+// }
 
 //Make bubble chart
