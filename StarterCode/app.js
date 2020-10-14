@@ -3,16 +3,14 @@
 function start(){
   d3.json("samples.json").then(function(data) {
     var samplenames = data.names
-    console.log(samplenames);
     var location = d3.select("#selDataset")
     samplenames.forEach((sampleId)=> {
       location.append("option").text(sampleId).property("value", sampleId)
     })
     var sampleId = samplenames[0]
-      console.log("Starting sample: ", sampleId);
     buildtable(sampleId)
     DrawBubbleChart(sampleId)
-    DrawBargraph(sampleId)
+    // DrawBargraph(sampleId)
 
   });  
 }
@@ -24,9 +22,7 @@ start()
 function buildtable(sampleid){
   d3.json("samples.json").then(function(data){
     var demographics = data.metadata
-    console.log(demographics);
     var filterData = demographics.filter(x => x.id == sampleid)
-    console.log(filterData[0])
     var location = d3.select("#sample-metadata")
 
 
@@ -41,9 +37,45 @@ function buildtable(sampleid){
 // Make bubble chart
 function DrawBubbleChart(sampleId)
 {
-   console.log('DrawBubbleChart(${sampleId})');
+  d3.json("samples.json").then((data) => 
+  { 
+    function filterSample(sampleData)
+    {
+      return sampleData.id == sampleId;
+    }
+  
+    var sampleData = data.samples.filter(filterSample);
+    var bubbleDiv = d3.select("#bubble");
+    bubbleDiv.html("");
+    otuIDs = sampleData[0].otu_ids;
+    sampleValues = sampleData[0].sample_values;
+    Labels = sampleData[0].otu_labels;
+    var bubbleData = 
+    {
+      x: otuIDs,
+      y: sampleValues,
+      text: Labels,
+      mode: 'markers',
+      number: { prefix: "OTU "},
+      marker: 
+      {
+        size: sampleValues,
+        color: otuIDs
+      }
+    };
+        
+    var bubbledata = [bubbleData];
+    var layout = 
+    {
+      title: 'OTU Size Chart',
+      xaxis: {title: 'OTU ID'},
+      yaxis: {title: 'OTU Size'}
+    };
+    Plotly.newPlot('bubble', bubbledata, layout);
 
+  });
 }
+
 
 // //The following code is borrowed with permission from office hours with Dom on Thursday, October 1.
 // //Make bar chart
@@ -81,7 +113,7 @@ function optionChanged(newSampleId)
 {
   console.log('User selected ${newSampleId}');
   DrawBubbleChart(newSampleId);
-  DrawBargraph(newSampleId);
+  // DrawBargraph(newSampleId);
 }
 
 // // Use D3 to create an event handler
