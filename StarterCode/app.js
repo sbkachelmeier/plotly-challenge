@@ -10,7 +10,7 @@ function start(){
     var sampleId = samplenames[0]
     buildtable(sampleId)
     DrawBubbleChart(sampleId)
-    // DrawBargraph(sampleId)
+    DrawBargraph(sampleId)
 
   });  
 }
@@ -24,6 +24,7 @@ function buildtable(sampleid){
     var demographics = data.metadata
     var filterData = demographics.filter(x => x.id == sampleid)
     var location = d3.select("#sample-metadata")
+    location.html("")
 
 
     Object.entries(filterData[0]).forEach(([key, value]) => {
@@ -79,40 +80,41 @@ function DrawBubbleChart(sampleId)
 
 // //The following code is borrowed with permission from office hours with Dom on Thursday, October 1.
 // //Make bar chart
-// function DrawBargraph(sampleID)
-// {
-//   console.log('DrawBargraph(${sampleId})');
-//   d3.json("samples.json").then((data) => {
+function DrawBargraph(sampleID)
+{
+  
+  d3.json("samples.json").then((data) => {
 
-//     var samples = data.samples;
-//     var resultArray = samples.filter(s => s.id == sampleId);
-//     var result = resultArray[0];
+    var samples = data.samples;
+    var resultArray = samples.filter(s => s.id == sampleID);
+    var result = resultArray[0];
 
-//     var otu_ids = result.otu_ids;
-//     var otu_labels = result.otu_labels;
-//     var sample_values = result.sample_values;
-//     var yticks = otu_ids.slice(0, 10).map(otuId) => (`OTU ${otuId}`).reverse();
+    var otu_ids = result.otu_ids;
+    var otu_labels = result.otu_labels;
+    var sample_values = result.sample_values;
+    var yticks = otu_ids.slice(0, 10).map(otuId => `OTU ${otuId}`).reverse();
 
-//     var barData = {
-//       x: sample_values.slice(0, 10).reverse(),
-//       y: yticks,
-//       type: "bar",
-//       text: otu_labels.slice(0, 10).reverse(),
-//       orientation: "h"
-//     }
-//     var barLayout = {
-//       title: "Top 10 Bacteria Cultures",
-//       margin: {t: 30, l: 150}
-//     }
-//     Plotly.newPlot("bar", [barData], barLayout);
-//   });
-// }
+    var barData = {
+      x: sample_values.slice(0, 10).reverse(),
+      y: yticks,
+      type: "bar",
+      text: otu_labels.slice(0, 10).reverse(),
+      orientation: "h"
+    }
+    var barLayout = {
+      title: "Top 10 Bacteria Cultures",
+      margin: {t: 30, l: 150}
+    }
+    Plotly.newPlot("bar", [barData], barLayout);
+  });
+}
 
 // // Make changed option event handler
 function optionChanged(newSampleId)
 {
+  
   DrawBubbleChart(newSampleId);
   buildtable(newSampleId)
-  // DrawBargraph(newSampleId);
+  DrawBargraph(newSampleId);
 }
 
